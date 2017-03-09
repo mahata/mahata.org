@@ -1,0 +1,4 @@
+ELB_SERVER_CERTIFICATE_UPDATER=/root/alb-update.sh
+
+# Every month (1st day of 6:15 a.m)
+15  6  1  *  *  $ELB_SERVER_CERTIFICATE_UPDATER 2>&1 > /var/log/alb-update.log
