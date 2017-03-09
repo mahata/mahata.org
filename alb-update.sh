@@ -20,6 +20,8 @@ CHAIN_PATH=$LE_FILES_ROOT/chain.pem
 FULLCHAIN_PATH=$LE_FILES_ROOT/fullchain.pem
 PRIVKEY_PATH=$LE_FILES_ROOT/privkey.pem
 
+source /root/.bash_profile
+
 if [ -z "$LISTENER_ARN" ]; then
     echo "LISTENER_ARN env var needs to be set:" >&2
     echo "e.g. LISTENER_ARN=arn:aws:elasticloadbalancing:ap-northeast-1:xxx" >&2
