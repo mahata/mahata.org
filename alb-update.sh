@@ -6,7 +6,7 @@ CERT_NAME="letsencrypt-cert"
 EXEC_AWS="aws --profile $AWS_PROFILE"
 LE_EMAIL="mahata777@gmail.com"
 LE_HOME=/root
-EXEC_LE_AUTO="${LE_HOME}/certbot-auto --email $LE_EMAIL --agree-tos"
+EXEC_LE_AUTO="${LE_HOME}/bin/certbot-auto --email $LE_EMAIL --agree-tos"
 
 DOMAINS=(
   "mahata.org"
