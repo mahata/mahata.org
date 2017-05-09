@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://blog.mahata.org/post/hello-world/</loc>
+    <lastmod>2017-05-09T21:55:39+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.mahata.org/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.mahata.org/post/</loc>
+    <lastmod>2017-05-09T21:55:39+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.mahata.org/tags/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.mahata.org/</loc>
+    <lastmod>2017-05-09T21:55:39+09:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

@@ -1,0 +1,7 @@
+baseURL = "https://blog.mahata.org/"
+languageCode = "ja-jp"
+title = "大事なものは目に見えない"
+pygmentsuseclasses = true
+
+[Params]
+  Author = "Yasunori MAHATA"

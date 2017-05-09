@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>大事なものは目に見えない</title>
+    <link>https://blog.mahata.org/</link>
+    <description>Recent content on 大事なものは目に見えない</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Tue, 09 May 2017 21:55:39 +0900</lastBuildDate>
+    
+	<atom:link href="https://blog.mahata.org/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>hello world</title>
+      <link>https://blog.mahata.org/post/hello-world/</link>
+      <pubDate>Tue, 09 May 2017 21:55:39 +0900</pubDate>
+      
+      <guid>https://blog.mahata.org/post/hello-world/</guid>
+      <description>Hugo で静的なファイルをホストする実験です。
+mahata.org のドメインを所有してはいたものの、ずっと活用していなかったので、これを機に使っていこうかと思案中。
+Pygments によるハイライトも試しておこう。
+int main() { return 0; }  </description>
+    </item>
+    
+  </channel>
+</rss>
