@@ -11,6 +11,7 @@ EXEC_LE_AUTO="${LE_HOME}/bin/certbot-auto --email $LE_EMAIL --agree-tos"
 DOMAINS=(
   "mahata.org"
   "www.mahata.org"
+  "blog.mahata.org"
 )
 
 LE_FILES_ROOT=/etc/letsencrypt/live/${DOMAINS[0]}
