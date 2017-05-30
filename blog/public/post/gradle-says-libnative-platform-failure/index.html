@@ -5,17 +5,27 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>大事なものは目に見えない</title>
-  <meta property="og:title" content="大事なものは目に見えない" />
-  <meta name="twitter:title" content="大事なものは目に見えない" />
+  <title>Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64.&#34; と言われるときの対処</title>
+  <meta property="og:title" content="Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64.&#34; と言われるときの対処" />
+  <meta name="twitter:title" content="Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for …" />
+  <meta name="description" content="gradle build をして、次のようなエラーに遭遇した:
+FAILURE: Build failed with an exception. * What went wrong: Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64. * Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.  いかにも何か依存パッケージが足りていないようなエラーメッセージだ。検索してみると「libstdc&#43;&#43; をインストールすると解決するよ」という記事も実際に存在する。
+僕も libstdc&#43;&#43; をインストールしてみたが、問題は解決しなかった。実際には ~/.gradle に root 権限でディレクトリが作られてしまっていたことが問題であった。単に ~/.gradle/* を削除して gradle build を実行しなおすことでビルドを実行できた。
+わかってしまえば簡単な問題だけど、エラーメッセージが不親切だと時間を無駄にしてしまう事例だ。">
+  <meta property="og:description" content="gradle build をして、次のようなエラーに遭遇した:
+FAILURE: Build failed with an exception. * What went wrong: Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64. * Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.  いかにも何か依存パッケージが足りていないようなエラーメッセージだ。検索してみると「libstdc&#43;&#43; をインストールすると解決するよ」という記事も実際に存在する。
+僕も libstdc&#43;&#43; をインストールしてみたが、問題は解決しなかった。実際には ~/.gradle に root 権限でディレクトリが作られてしまっていたことが問題であった。単に ~/.gradle/* を削除して gradle build を実行しなおすことでビルドを実行できた。
+わかってしまえば簡単な問題だけど、エラーメッセージが不親切だと時間を無駄にしてしまう事例だ。">
+  <meta name="twitter:description" content="gradle build をして、次のようなエラーに遭遇した:
+FAILURE: Build failed with an exception. * What went wrong: Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64. * Try: Run with --stacktrace option …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="/" />
+  <meta property="og:url" content="/post/gradle-says-libnative-platform-failure/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="大事なものは目に見えない" />
 
   <meta name="generator" content="Hugo 0.20.7" />
-  <link rel="canonical" href="/" />
+  <link rel="canonical" href="/post/gradle-says-libnative-platform-failure/" />
   <link rel="alternate" href="/index.xml" type="application/rss+xml" title="大事なものは目に見えない">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -80,9 +90,16 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>大事なものは目に見えない</h1>
+            <div class="post-heading">
+              <h1>Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64.&#34; と言われるときの対処</h1>
                 
+                
+                  <span class="post-meta">
+  Posted on May 30, 2017
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -93,29 +110,11 @@
 
 
     
-  <div role="main" class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        
-
-        <div class="posts-list">
-          
-          
-            <article class="post-preview">
-              <a href="/post/gradle-says-libnative-platform-failure/">
-                <h2 class="post-title">Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64.&#34; と言われるときの対処</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on May 30, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p><code>gradle build</code> をして、次のようなエラーに遭遇した:</p>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p><code>gradle build</code> をして、次のようなエラーに遭遇した:</p>
 
 <pre><code>FAILURE: Build failed with an exception.
 
@@ -132,49 +131,22 @@ Run with --stacktrace option to get the stack trace. Run with --info or --debug 
 
 <p>わかってしまえば簡単な問題だけど、エラーメッセージが不親切だと時間を無駄にしてしまう事例だ。</p>
 
-                
-              </div>
+      </article>
 
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/hello-world/">
-                <h2 class="post-title">Hello World</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on May 9, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p>Hugo で静的なファイルをホストする実験です。</p>
-
-<p>mahata.org のドメインを所有してはいたものの、ずっと活用していなかったので、これを機に使っていこうかと思案中。</p>
-
-<p>Pygments によるハイライトも試しておこう。</p>
-
-<pre><code class="language-c">int main() {
-  return 0;
-}
-</code></pre>
-
-                
-              </div>
-
-              
-            </article>
-          
-        </div>
-
+      <ul class="pager blog-pager">
         
-      </div>
+          <li class="previous">
+            <a href="/post/hello-world/" data-toggle="tooltip" data-placement="top" title="Hello World">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">
