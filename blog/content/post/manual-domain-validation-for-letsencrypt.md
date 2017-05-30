@@ -1,6 +1,6 @@
 +++
 date = "2017-05-30T21:55:39+09:00"
-draft = true
+draft = false
 title = "Gradle で \"Failed to load native library 'libnative-platform.so' for Linux amd64.\" と言われるときの対処"
 
 +++

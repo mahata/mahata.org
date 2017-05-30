@@ -6,13 +6,25 @@
     <description>Recent content on 大事なものは目に見えない</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Tue, 09 May 2017 21:55:39 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 30 May 2017 21:55:39 +0900</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>hello world</title>
+      <title>Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64.&#34; と言われるときの対処</title>
+      <link>/post/manual-domain-validation-for-letsencrypt/</link>
+      <pubDate>Tue, 30 May 2017 21:55:39 +0900</pubDate>
+      
+      <guid>/post/manual-domain-validation-for-letsencrypt/</guid>
+      <description>gradle build をして、次のようなエラーに遭遇した:
+FAILURE: Build failed with an exception. * What went wrong: Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64. * Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.  いかにも何か依存パッケージが足りていないようなエラーメッセージだ。検索してみると「libstdc++ をインストールすると解決するよ」という記事も実際に存在する。
+僕も libstdc++ をインストールしてみたが、問題は解決しなかった。実際には ~/.gradle に root 権限でディレクトリが作られてしまっていたことが問題であった。単に ~/.gradle/* を削除して gradle build を実行しなおすことでビルドを実行できた。
+わかってしまえば簡単な問題だけど、エラーメッセージが不親切だと時間を無駄にしてしまう事例だ。</description>
+    </item>
+    
+    <item>
+      <title>Hello World</title>
       <link>/post/hello-world/</link>
       <pubDate>Tue, 09 May 2017 21:55:39 +0900</pubDate>
       

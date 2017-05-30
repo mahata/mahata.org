@@ -87,8 +87,44 @@
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="/post/manual-domain-validation-for-letsencrypt/">
+                <h2 class="post-title">Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64.&#34; と言われるときの対処</h2>
+    
+                
+              </a>
+    
+              <p class="post-meta">
+                Posted on May 30, 2017
+              </p>
+              <div class="post-entry">
+                
+                  <p><code>gradle build</code> をして、次のようなエラーに遭遇した:</p>
+
+<pre><code>FAILURE: Build failed with an exception.
+
+* What went wrong:
+Failed to load native library 'libnative-platform.so' for Linux amd64.
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+</code></pre>
+
+<p>いかにも何か依存パッケージが足りていないようなエラーメッセージだ。検索してみると「<code>libstdc++</code> をインストールすると解決するよ」という記事も実際に存在する。</p>
+
+<p>僕も <code>libstdc++</code> をインストールしてみたが、問題は解決しなかった。実際には <code>~/.gradle</code> に <code>root</code> 権限でディレクトリが作られてしまっていたことが問題であった。単に <code>~/.gradle/*</code> を削除して <code>gradle build</code> を実行しなおすことでビルドを実行できた。</p>
+
+<p>わかってしまえば簡単な問題だけど、エラーメッセージが不親切だと時間を無駄にしてしまう事例だ。</p>
+
+                
+              </div>
+    
+              
+    
+            </article>
+          
+            <article class="post-preview">
               <a href="/post/hello-world/">
-                <h2 class="post-title">hello world</h2>
+                <h2 class="post-title">Hello World</h2>
     
                 
               </a>
