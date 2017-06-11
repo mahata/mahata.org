@@ -1,15 +1,21 @@
+machine:
+  environment:
+    BLOG_DIR: $HOME/$CIRCLE_PROJECT_REPONAME
+    PATH: ~/.local/bin:$PATH
+
+dependencies:
+  cache_directories:
+    - ~/.local  # Not in use at this moment
+
 test:
   override:
-    - hugo -v
-    - cd blog;
-    - docker build -t blog.mahata.org .
+    - cd $BLOG_DIR; docker build -t blog.mahata.org .
 
 deployment:
   deploy:
     branch: master
     commands:
       - export TODAY=$(date "+%Y%m%d")
-      - cd blog;
-      - docker tag blog.mahata.org mahata/blog.mahata.org:$(echo $TODAY)
-      - docker login -u mahata -p $DOCKERHUB_PASS
-      - docker push mahata/blog.mahata.org:$(echo $TODAY)
+      - cd $BLOG_DIR; docker tag blog.mahata.org mahata/blog.mahata.org:$(echo $TODAY)
+      - cd $BLOG_DIR; docker login -u mahata -p $DOCKERHUB_PASS
+      - cd $BLOG_DIR; docker push mahata/blog.mahata.org:$(echo $TODAY)
