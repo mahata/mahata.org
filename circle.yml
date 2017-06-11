@@ -1,0 +1,15 @@
+test:
+  override:
+    - hugo -v
+    - cd blog;
+    - docker build -t blog.mahata.org .
+
+deployment:
+  deploy:
+    branch: master
+    commands:
+      - export TODAY=$(date "+%Y%m%d")
+      - cd blog;
+      - docker tag blog.mahata.org mahata/blog.mahata.org:$(echo $TODAY)
+      - docker login -u mahata -p $DOCKERHUB_PASS
+      - docker push mahata/blog.mahata.org:$(echo $TODAY)
