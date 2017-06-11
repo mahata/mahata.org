@@ -1,6 +1,6 @@
 machine:
   environment:
-    BLOG_DIR: $HOME/$CIRCLE_PROJECT_REPONAME
+    BLOG_DIR: $HOME/$CIRCLE_PROJECT_REPONAME/blog
     PATH: ~/.local/bin:$PATH
 
 dependencies:
