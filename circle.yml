@@ -19,5 +19,5 @@ deployment:
     commands:
       - export TODAY=$(date "+%Y%m%d")
       - cd $BLOG_DIR; docker tag blog.mahata.org mahata/blog.mahata.org:$(echo $TODAY)
-      - cd $BLOG_DIR; docker login -u mahata -p $DOCKERHUB_PASS
+      - cd $BLOG_DIR; docker login -u $DOCKERHUB_USER -e $DOCKERHUB_EMAIL -p $DOCKERHUB_PASS
       - cd $BLOG_DIR; docker push mahata/blog.mahata.org:$(echo $TODAY)
