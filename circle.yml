@@ -9,15 +9,12 @@ dependencies:
   cache_directories:
     - ~/.local  # Not in use at this moment
 
-test:
-  override:
-    - cd $BLOG_DIR; docker build -t blog.mahata.org .
-
 deployment:
   deploy:
     branch: master
     commands:
       - export TODAY=$(date "+%Y%m%d")
+      - cd $BLOG_DIR; docker build -t blog.mahata.org .
       - cd $BLOG_DIR; docker tag blog.mahata.org mahata/blog.mahata.org:$(echo $TODAY)
       - cd $BLOG_DIR; docker login -u $DOCKERHUB_USER -e $DOCKERHUB_EMAIL -p $DOCKERHUB_PASS
       - cd $BLOG_DIR; docker push mahata/blog.mahata.org:$(echo $TODAY)
