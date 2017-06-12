@@ -9,6 +9,10 @@ dependencies:
   cache_directories:
     - ~/.local  # Not in use at this moment
 
+test:
+  override:
+    - echo "Dummy test."
+
 deployment:
   deploy:
     branch: master
