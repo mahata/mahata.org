@@ -5,27 +5,30 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64.&#34; と言われるときの対処</title>
-  <meta property="og:title" content="Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64.&#34; と言われるときの対処" />
-  <meta name="twitter:title" content="Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for …" />
-  <meta name="description" content="gradle build をして、次のようなエラーに遭遇した:
-FAILURE: Build failed with an exception. * What went wrong: Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64. * Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.  いかにも何か依存パッケージが足りていないようなエラーメッセージだ。検索してみると「libstdc&#43;&#43; をインストールすると解決するよ」という記事も実際に存在する。
-僕も libstdc&#43;&#43; をインストールしてみたが、問題は解決しなかった。実際には ~/.gradle に root 権限でディレクトリが作られてしまっていたことが問題であった。単に ~/.gradle/* を削除して gradle build を実行しなおすことでビルドを実行できた。
-わかってしまえば簡単な問題だけど、エラーメッセージが不親切だと時間を無駄にしてしまう事例だ。">
-  <meta property="og:description" content="gradle build をして、次のようなエラーに遭遇した:
-FAILURE: Build failed with an exception. * What went wrong: Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64. * Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.  いかにも何か依存パッケージが足りていないようなエラーメッセージだ。検索してみると「libstdc&#43;&#43; をインストールすると解決するよ」という記事も実際に存在する。
-僕も libstdc&#43;&#43; をインストールしてみたが、問題は解決しなかった。実際には ~/.gradle に root 権限でディレクトリが作られてしまっていたことが問題であった。単に ~/.gradle/* を削除して gradle build を実行しなおすことでビルドを実行できた。
-わかってしまえば簡単な問題だけど、エラーメッセージが不親切だと時間を無駄にしてしまう事例だ。">
-  <meta name="twitter:description" content="gradle build をして、次のようなエラーに遭遇した:
-FAILURE: Build failed with an exception. * What went wrong: Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64. * Try: Run with --stacktrace option …">
+  <title>Ruby 2.0 (or later) の CoW</title>
+  <meta property="og:title" content="Ruby 2.0 (or later) の CoW" />
+  <meta name="twitter:title" content="Ruby 2.0 (or later) の CoW" />
+  <meta name="description" content="Working With Unix Processes を読んでいる。
+これによると、Ruby (MRI) では 2.0 まで CoW (Copy on Write) が実装されていなかったそうだ。理由は Ruby の GC がナイーブなマーク・アンド・スイープであったから、らしい。
+バージョン 1.9 までの Ruby は、マークのタイミングでオブジェクト内に直接「使用中」フラグを立てていたそうだ。つまり、オブジェクトに変更を加えることになるので、このタイミングでオブジェクトのコピーが発生してしまう。
+バージョン 2.0 からは、マーク・アンド・スイープのために専用のメモリ領域をつくるので、マークのタイミングでオブジェクト自身を変更する必要はない。これなら CoW を機能させることができる。
+なるほどなあ。">
+  <meta property="og:description" content="Working With Unix Processes を読んでいる。
+これによると、Ruby (MRI) では 2.0 まで CoW (Copy on Write) が実装されていなかったそうだ。理由は Ruby の GC がナイーブなマーク・アンド・スイープであったから、らしい。
+バージョン 1.9 までの Ruby は、マークのタイミングでオブジェクト内に直接「使用中」フラグを立てていたそうだ。つまり、オブジェクトに変更を加えることになるので、このタイミングでオブジェクトのコピーが発生してしまう。
+バージョン 2.0 からは、マーク・アンド・スイープのために専用のメモリ領域をつくるので、マークのタイミングでオブジェクト自身を変更する必要はない。これなら CoW を機能させることができる。
+なるほどなあ。">
+  <meta name="twitter:description" content="Working With Unix Processes を読んでいる。
+これによると、Ruby (MRI) では 2.0 まで CoW (Copy on Write) が実装されていなかったそうだ。理由は Ruby の GC がナイーブなマーク・アンド・スイープであったから、らしい。
+バージョン 1.9 までの Ruby は、マークのタイミングでオブジェクト内に直接「使用中」フラグを立てていたそう …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="/post/gradle-says-libnative-platform-failure/" />
+  <meta property="og:url" content="/post/ruby-gc-cow/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="大事なものは目に見えない" />
 
   <meta name="generator" content="Hugo 0.20.7" />
-  <link rel="canonical" href="/post/gradle-says-libnative-platform-failure/" />
+  <link rel="canonical" href="/post/ruby-gc-cow/" />
   <link rel="alternate" href="/index.xml" type="application/rss+xml" title="大事なものは目に見えない">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -141,11 +144,11 @@ FAILURE: Build failed with an exception. * What went wrong: Failed to load nativ
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64.&#34; と言われるときの対処</h1>
+              <h1>Ruby 2.0 (or later) の CoW</h1>
                 
                 
                   <span class="post-meta">
-  Posted on May 30, 2017
+  Posted on June 13, 2017
   
 </span>
 
@@ -164,35 +167,24 @@ FAILURE: Build failed with an exception. * What went wrong: Failed to load nativ
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p><code>gradle build</code> をして、次のようなエラーに遭遇した:</p>
+        <p><a href="https://www.amazon.co.jp/exec/obidos/ASIN/B0078VSRUE/96c11b31f45ff807-22/ref=nosim/">Working With Unix Processes</a> を読んでいる。</p>
 
-<pre><code>FAILURE: Build failed with an exception.
+<p>これによると、Ruby (MRI) では 2.0 まで CoW (Copy on Write) が実装されていなかったそうだ。理由は Ruby の GC がナイーブなマーク・アンド・スイープであったから、らしい。</p>
 
-* What went wrong:
-Failed to load native library 'libnative-platform.so' for Linux amd64.
+<p>バージョン 1.9 までの Ruby は、マークのタイミングでオブジェクト内に直接「使用中」フラグを立てていたそうだ。つまり、オブジェクトに変更を加えることになるので、このタイミングでオブジェクトのコピーが発生してしまう。</p>
 
-* Try:
-Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
-</code></pre>
+<p>バージョン 2.0 からは、マーク・アンド・スイープのために専用のメモリ領域をつくるので、マークのタイミングでオブジェクト自身を変更する必要はない。これなら CoW を機能させることができる。</p>
 
-<p>いかにも何か依存パッケージが足りていないようなエラーメッセージだ。検索してみると「<code>libstdc++</code> をインストールすると解決するよ」という記事も実際に存在する。</p>
-
-<p>僕も <code>libstdc++</code> をインストールしてみたが、問題は解決しなかった。実際には <code>~/.gradle</code> に <code>root</code> 権限でディレクトリが作られてしまっていたことが問題であった。単に <code>~/.gradle/*</code> を削除して <code>gradle build</code> を実行しなおすことでビルドを実行できた。</p>
-
-<p>わかってしまえば簡単な問題だけど、エラーメッセージが不親切だと時間を無駄にしてしまう事例だ。</p>
+<p>なるほどなあ。</p>
 
       </article>
 
       <ul class="pager blog-pager">
         
           <li class="previous">
-            <a href="/post/hello-world/" data-toggle="tooltip" data-placement="top" title="Hello World">&larr; Previous Post</a>
+            <a href="/post/gradle-says-libnative-platform-failure/" data-toggle="tooltip" data-placement="top" title="Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64.&#34; と言われるときの対処">&larr; Previous Post</a>
           </li>
         
-        
-          <li class="next">
-            <a href="/post/ruby-gc-cow/" data-toggle="tooltip" data-placement="top" title="Ruby 2.0 (or later) の CoW">Next Post &rarr;</a>
-          </li>
         
       </ul>
 

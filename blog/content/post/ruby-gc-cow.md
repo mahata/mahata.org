@@ -1,6 +1,6 @@
 +++
 date = "2017-06-13T19:16:35+09:00"
-draft = true
+draft = false
 title = "Ruby 2.0 (or later) の CoW"
 
 +++
