@@ -18,6 +18,8 @@ deployment:
     branch: master
     commands:
       - export TODAY=$(date "+%Y%m%d")
+      - echo $TODAY  # DBG
+      - ls -al $BLOG_DIR/public/post  # DBG
       - cd $BLOG_DIR; docker build -t blog.mahata.org .
       - cd $BLOG_DIR; docker tag blog.mahata.org mahata/blog.mahata.org:$(echo $TODAY)
       - cd $BLOG_DIR; docker login -u $DOCKERHUB_USER -e $DOCKERHUB_EMAIL -p $DOCKERHUB_PASS
