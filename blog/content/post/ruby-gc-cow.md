@@ -5,7 +5,7 @@ title = "Ruby 2.0 (or later) の CoW"
 
 +++
 
-[Working With Unix Processes](https://www.amazon.co.jp/exec/obidos/ASIN/B0078VSRUE/96c11b31f45ff807-22/ref=nosim/) を読んでいる。
+「[Working With Unix Processes](https://www.amazon.co.jp/exec/obidos/ASIN/B0078VSRUE/96c11b31f45ff807-22/ref=nosim/)」を読んでいる。
 
 これによると、Ruby (MRI) では 2.0 まで CoW (Copy on Write) が実装されていなかったそうだ。理由は Ruby の GC がナイーブなマーク・アンド・スイープであったから、らしい。
 

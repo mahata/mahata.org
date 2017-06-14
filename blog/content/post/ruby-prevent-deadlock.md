@@ -1,13 +1,13 @@
 +++
 date = "2017-06-14T22:11:57+09:00"
 draft = true
-title = "Ruby で wait 絡みのデッドロックを防ぐ仕組み"
+title = "*nix が wait 絡みのデッドロックを防ぐ仕組み"
 
 +++
 
-引き続き [Working With Unix Processes](https://www.amazon.co.jp/exec/obidos/ASIN/B0078VSRUE/96c11b31f45ff807-22/ref=nosim/) を読んでいる。
+引き続き「[Working With Unix Processes](https://www.amazon.co.jp/exec/obidos/ASIN/B0078VSRUE/96c11b31f45ff807-22/ref=nosim/)」を読んでいる。
 
-サンプルで「デッドロックが起こりそう **だけど、起こらない**」コードが掲載されていた。次のスニペットは、そのサンプルを説明のため少しだけ書き換えたものだ。
+サンプルで「デッドロックが起こりそう **だけど、起こらない**」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。
 
 ```ruby
 #!/usr/bin/env ruby
