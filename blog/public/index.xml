@@ -6,10 +6,24 @@
     <description>Recent content on 大事なものは目に見えない</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Tue, 13 Jun 2017 19:16:35 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 14 Jun 2017 22:11:57 +0900</lastBuildDate>
     
 	<atom:link href="https://blog.mahata.org/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>*nix が wait 絡みのデッドロックを防ぐ仕組み</title>
+      <link>https://blog.mahata.org/post/ruby-prevent-deadlock/</link>
+      <pubDate>Wed, 14 Jun 2017 22:11:57 +0900</pubDate>
+      
+      <guid>https://blog.mahata.org/post/ruby-prevent-deadlock/</guid>
+      <description>引き続き「Working With Unix Processes」を読んでいる。
+サンプルで「デッドロックが起こりそう だけど、起こらない」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。
+#!/usr/bin/env ruby # ふたつの子プロセスをつくり、すぐに殺す 2.times do fork do abort &amp;quot;おしまい&amp;quot; end end # 最初の子プロセスを待ち、その後は3秒ほど寝る # 寝ている間にもうひとつの子プロセスも終了する puts Process.wait sleep 3 # もう子プロセスは終了しているので、これはデッドロックするはずでは? =&amp;gt; 実際はしない puts Process.wait  コードのコメントに書いた通りなのだが、最後の Process.wait はデッドロックになっても不思議ではない&amp;hellip; けど、実際にはデッドロックにならない。
+カーネルには exit したプロセスの情報をキューに詰めておく機構があり、親プロセスは死んだ子プロセスの順にその情報を取得できる。だから、サンプルでの最後の Process.wait は実際には子プロセスの終了を待つのではなく、キューから「既に死んだ」子プロセスの情報を取得している。
+ただ、子プロセスが存在しない「かつ」前述のキューにもデータが存在しないとき、Process.wait は Errno::ECHILD 例外を起こす。
+まあ、それはそうだよね。</description>
+    </item>
     
     <item>
       <title>Ruby 2.0 (or later) の CoW</title>

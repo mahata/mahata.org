@@ -5,17 +5,32 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>大事なものは目に見えない</title>
-  <meta property="og:title" content="大事なものは目に見えない" />
-  <meta name="twitter:title" content="大事なものは目に見えない" />
+  <title>*nix が wait 絡みのデッドロックを防ぐ仕組み</title>
+  <meta property="og:title" content="*nix が wait 絡みのデッドロックを防ぐ仕組み" />
+  <meta name="twitter:title" content="*nix が wait 絡みのデッドロックを防ぐ仕組み" />
+  <meta name="description" content="引き続き「Working With Unix Processes」を読んでいる。
+サンプルで「デッドロックが起こりそう だけど、起こらない」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。
+#!/usr/bin/env ruby # ふたつの子プロセスをつくり、すぐに殺す 2.times do fork do abort &quot;おしまい&quot; end end # 最初の子プロセスを待ち、その後は3秒ほど寝る # 寝ている間にもうひとつの子プロセスも終了する puts Process.wait sleep 3 # もう子プロセスは終了しているので、これはデッドロックするはずでは? =&gt; 実際はしない puts Process.wait  コードのコメントに書いた通りなのだが、最後の Process.wait はデッドロックになっても不思議ではない&hellip; けど、実際にはデッドロックにならない。
+カーネルには exit したプロセスの情報をキューに詰めておく機構があり、親プロセスは死んだ子プロセスの順にその情報を取得できる。だから、サンプルでの最後の Process.wait は実際には子プロセスの終了を待つのではなく、キューから「既に死んだ」子プロセスの情報を取得している。
+ただ、子プロセスが存在しない「かつ」前述のキューにもデータが存在しないとき、Process.wait は Errno::ECHILD 例外を起こす。
+まあ、それはそうだよね。">
+  <meta property="og:description" content="引き続き「Working With Unix Processes」を読んでいる。
+サンプルで「デッドロックが起こりそう だけど、起こらない」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。
+#!/usr/bin/env ruby # ふたつの子プロセスをつくり、すぐに殺す 2.times do fork do abort &quot;おしまい&quot; end end # 最初の子プロセスを待ち、その後は3秒ほど寝る # 寝ている間にもうひとつの子プロセスも終了する puts Process.wait sleep 3 # もう子プロセスは終了しているので、これはデッドロックするはずでは? =&gt; 実際はしない puts Process.wait  コードのコメントに書いた通りなのだが、最後の Process.wait はデッドロックになっても不思議ではない&hellip; けど、実際にはデッドロックにならない。
+カーネルには exit したプロセスの情報をキューに詰めておく機構があり、親プロセスは死んだ子プロセスの順にその情報を取得できる。だから、サンプルでの最後の Process.wait は実際には子プロセスの終了を待つのではなく、キューから「既に死んだ」子プロセスの情報を取得している。
+ただ、子プロセスが存在しない「かつ」前述のキューにもデータが存在しないとき、Process.wait は Errno::ECHILD 例外を起こす。
+まあ、それはそうだよね。">
+  <meta name="twitter:description" content="引き続き「Working With Unix Processes」を読んでいる。
+サンプルで「デッドロックが起こりそう だけど、起こらない」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。
+#!/usr/bin/env ruby # ふたつの子プロセスをつくり、すぐに殺す 2.times do fork do abort &quot;おしまい&quot; end …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://blog.mahata.org/" />
+  <meta property="og:url" content="https://blog.mahata.org/post/ruby-prevent-deadlock/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="大事なものは目に見えない" />
 
   <meta name="generator" content="Hugo 0.20.7" />
-  <link rel="canonical" href="https://blog.mahata.org/" />
+  <link rel="canonical" href="https://blog.mahata.org/post/ruby-prevent-deadlock/" />
   <link rel="alternate" href="https://blog.mahata.org/index.xml" type="application/rss+xml" title="大事なものは目に見えない">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -130,9 +145,16 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>大事なものは目に見えない</h1>
+            <div class="post-heading">
+              <h1>*nix が wait 絡みのデッドロックを防ぐ仕組み</h1>
                 
+                
+                  <span class="post-meta">
+  Posted on June 14, 2017
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -143,29 +165,11 @@
 
 
     
-  <div role="main" class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        
-
-        <div class="posts-list">
-          
-          
-            <article class="post-preview">
-              <a href="https://blog.mahata.org/post/ruby-prevent-deadlock/">
-                <h2 class="post-title">*nix が wait 絡みのデッドロックを防ぐ仕組み</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on June 14, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p>引き続き「<a href="https://www.amazon.co.jp/exec/obidos/ASIN/B0078VSRUE/96c11b31f45ff807-22/ref=nosim/">Working With Unix Processes</a>」を読んでいる。</p>
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>引き続き「<a href="https://www.amazon.co.jp/exec/obidos/ASIN/B0078VSRUE/96c11b31f45ff807-22/ref=nosim/">Working With Unix Processes</a>」を読んでいる。</p>
 
 <p>サンプルで「デッドロックが起こりそう <strong>だけど、起こらない</strong>」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。</p>
 
@@ -195,116 +199,22 @@ puts Process.wait
 
 <p>まあ、それはそうだよね。</p>
 
-                
-              </div>
+      </article>
 
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://blog.mahata.org/post/ruby-gc-cow/">
-                <h2 class="post-title">Ruby 2.0 (or later) の CoW</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on June 13, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p>「<a href="https://www.amazon.co.jp/exec/obidos/ASIN/B0078VSRUE/96c11b31f45ff807-22/ref=nosim/">Working With Unix Processes</a>」を読んでいる。</p>
-
-<p>これによると、Ruby (MRI) では 2.0 まで CoW (Copy on Write) が実装されていなかったそうだ。理由は Ruby の GC がナイーブなマーク・アンド・スイープであったから、らしい。</p>
-
-<p>バージョン 1.9 までの Ruby は、マークのタイミングでオブジェクト内に直接「使用中」フラグを立てていたそうだ。つまり、オブジェクトに変更を加えることになるので、このタイミングでオブジェクトのコピーが発生してしまう。</p>
-
-<p>バージョン 2.0 からは、マーク・アンド・スイープのために専用のメモリ領域をつくるので、マークのタイミングでオブジェクト自身を変更する必要はない。これなら CoW を機能させることができる。</p>
-
-<p>なるほどなあ。</p>
-
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://blog.mahata.org/post/gradle-says-libnative-platform-failure/">
-                <h2 class="post-title">Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64.&#34; と言われるときの対処</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on May 30, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p><code>gradle build</code> をして、次のようなエラーに遭遇した:</p>
-
-<pre><code>FAILURE: Build failed with an exception.
-
-* What went wrong:
-Failed to load native library 'libnative-platform.so' for Linux amd64.
-
-* Try:
-Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
-</code></pre>
-
-<p>いかにも何か依存パッケージが足りていないようなエラーメッセージだ。検索してみると「<code>libstdc++</code> をインストールすると解決するよ」という記事も実際に存在する。</p>
-
-<p>僕も <code>libstdc++</code> をインストールしてみたが、問題は解決しなかった。実際には <code>~/.gradle</code> に <code>root</code> 権限でディレクトリが作られてしまっていたことが問題であった。単に <code>~/.gradle/*</code> を削除して <code>gradle build</code> を実行しなおすことでビルドを実行できた。</p>
-
-<p>わかってしまえば簡単な問題だけど、エラーメッセージが不親切だと時間を無駄にしてしまう事例だ。</p>
-
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://blog.mahata.org/post/hello-world/">
-                <h2 class="post-title">Hello World</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on May 9, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p>Hugo で静的なファイルをホストする実験です。</p>
-
-<p>mahata.org のドメインを所有してはいたものの、ずっと活用していなかったので、これを機に使っていこうかと思案中。</p>
-
-<p>Pygments によるハイライトも試しておこう。</p>
-
-<pre><code class="language-c">int main() {
-  return 0;
-}
-</code></pre>
-
-                
-              </div>
-
-              
-            </article>
-          
-        </div>
-
+      <ul class="pager blog-pager">
         
-      </div>
+          <li class="previous">
+            <a href="https://blog.mahata.org/post/ruby-gc-cow/" data-toggle="tooltip" data-placement="top" title="Ruby 2.0 (or later) の CoW">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">

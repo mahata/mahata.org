@@ -1,6 +1,6 @@
 +++
 date = "2017-06-14T22:11:57+09:00"
-draft = true
+draft = false
 title = "*nix が wait 絡みのデッドロックを防ぐ仕組み"
 
 +++
