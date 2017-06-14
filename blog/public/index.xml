@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>大事なものは目に見えない</title>
-    <link>/</link>
+    <link>https://blog.mahata.org/</link>
     <description>Recent content on 大事なものは目に見えない</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
     <lastBuildDate>Tue, 13 Jun 2017 19:16:35 +0900</lastBuildDate>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://blog.mahata.org/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Ruby 2.0 (or later) の CoW</title>
-      <link>/post/ruby-gc-cow/</link>
+      <link>https://blog.mahata.org/post/ruby-gc-cow/</link>
       <pubDate>Tue, 13 Jun 2017 19:16:35 +0900</pubDate>
       
-      <guid>/post/ruby-gc-cow/</guid>
-      <description>Working With Unix Processes を読んでいる。
+      <guid>https://blog.mahata.org/post/ruby-gc-cow/</guid>
+      <description>「Working With Unix Processes」を読んでいる。
 これによると、Ruby (MRI) では 2.0 まで CoW (Copy on Write) が実装されていなかったそうだ。理由は Ruby の GC がナイーブなマーク・アンド・スイープであったから、らしい。
 バージョン 1.9 までの Ruby は、マークのタイミングでオブジェクト内に直接「使用中」フラグを立てていたそうだ。つまり、オブジェクトに変更を加えることになるので、このタイミングでオブジェクトのコピーが発生してしまう。
 バージョン 2.0 からは、マーク・アンド・スイープのために専用のメモリ領域をつくるので、マークのタイミングでオブジェクト自身を変更する必要はない。これなら CoW を機能させることができる。
@@ -26,10 +26,10 @@
     
     <item>
       <title>Gradle で &#34;Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64.&#34; と言われるときの対処</title>
-      <link>/post/gradle-says-libnative-platform-failure/</link>
+      <link>https://blog.mahata.org/post/gradle-says-libnative-platform-failure/</link>
       <pubDate>Tue, 30 May 2017 21:55:39 +0900</pubDate>
       
-      <guid>/post/gradle-says-libnative-platform-failure/</guid>
+      <guid>https://blog.mahata.org/post/gradle-says-libnative-platform-failure/</guid>
       <description>gradle build をして、次のようなエラーに遭遇した:
 FAILURE: Build failed with an exception. * What went wrong: Failed to load native library &#39;libnative-platform.so&#39; for Linux amd64. * Try: Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.  いかにも何か依存パッケージが足りていないようなエラーメッセージだ。検索してみると「libstdc++ をインストールすると解決するよ」という記事も実際に存在する。
 僕も libstdc++ をインストールしてみたが、問題は解決しなかった。実際には ~/.gradle に root 権限でディレクトリが作られてしまっていたことが問題であった。単に ~/.gradle/* を削除して gradle build を実行しなおすことでビルドを実行できた。
@@ -38,10 +38,10 @@ FAILURE: Build failed with an exception. * What went wrong: Failed to load nativ
     
     <item>
       <title>Hello World</title>
-      <link>/post/hello-world/</link>
+      <link>https://blog.mahata.org/post/hello-world/</link>
       <pubDate>Tue, 09 May 2017 21:55:39 +0900</pubDate>
       
-      <guid>/post/hello-world/</guid>
+      <guid>https://blog.mahata.org/post/hello-world/</guid>
       <description>Hugo で静的なファイルをホストする実験です。
 mahata.org のドメインを所有してはいたものの、ずっと活用していなかったので、これを機に使っていこうかと思案中。
 Pygments によるハイライトも試しておこう。
