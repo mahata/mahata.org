@@ -5,32 +5,29 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>*nix が wait 絡みのデッドロックを防ぐ仕組み</title>
-  <meta property="og:title" content="*nix が wait 絡みのデッドロックを防ぐ仕組み" />
-  <meta name="twitter:title" content="*nix が wait 絡みのデッドロックを防ぐ仕組み" />
-  <meta name="description" content="引き続き「Working With Unix Processes」を読んでいる。
-サンプルで「デッドロックが起こりそう だけど、起こらない」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。
-#!/usr/bin/env ruby # ふたつの子プロセスをつくり、すぐに殺す 2.times do fork do abort &quot;おしまい&quot; end end # 最初の子プロセスを待ち、その後は3秒ほど寝る # 寝ている間にもうひとつの子プロセスも終了する puts Process.wait sleep 3 # もう子プロセスは終了しているので、これはデッドロックするはずでは? =&gt; 実際はしない puts Process.wait  コードのコメントに書いた通りなのだが、最後の Process.wait はデッドロックになっても不思議ではない&hellip; けど、実際にはデッドロックにならない。
-カーネルには exit したプロセスの情報をキューに詰めておく機構があり、親プロセスは死んだ子プロセスの順にその情報を取得できる。だから、サンプルでの最後の Process.wait は実際には子プロセスの終了を待つのではなく、キューから「既に死んだ」子プロセスの情報を取得している。
-ただ、子プロセスが存在しない「かつ」前述のキューにもデータが存在しないとき、Process.wait は Errno::ECHILD 例外を起こす。
-まあ、それはそうだよね。">
-  <meta property="og:description" content="引き続き「Working With Unix Processes」を読んでいる。
-サンプルで「デッドロックが起こりそう だけど、起こらない」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。
-#!/usr/bin/env ruby # ふたつの子プロセスをつくり、すぐに殺す 2.times do fork do abort &quot;おしまい&quot; end end # 最初の子プロセスを待ち、その後は3秒ほど寝る # 寝ている間にもうひとつの子プロセスも終了する puts Process.wait sleep 3 # もう子プロセスは終了しているので、これはデッドロックするはずでは? =&gt; 実際はしない puts Process.wait  コードのコメントに書いた通りなのだが、最後の Process.wait はデッドロックになっても不思議ではない&hellip; けど、実際にはデッドロックにならない。
-カーネルには exit したプロセスの情報をキューに詰めておく機構があり、親プロセスは死んだ子プロセスの順にその情報を取得できる。だから、サンプルでの最後の Process.wait は実際には子プロセスの終了を待つのではなく、キューから「既に死んだ」子プロセスの情報を取得している。
-ただ、子プロセスが存在しない「かつ」前述のキューにもデータが存在しないとき、Process.wait は Errno::ECHILD 例外を起こす。
-まあ、それはそうだよね。">
-  <meta name="twitter:description" content="引き続き「Working With Unix Processes」を読んでいる。
-サンプルで「デッドロックが起こりそう だけど、起こらない」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。
-#!/usr/bin/env ruby # ふたつの子プロセスをつくり、すぐに殺す 2.times do fork do abort &quot;おしまい&quot; end …">
+  <title>AWS CLI で EBS のスナップショットを作成する</title>
+  <meta property="og:title" content="AWS CLI で EBS のスナップショットを作成する" />
+  <meta name="twitter:title" content="AWS CLI で EBS のスナップショットを作成する" />
+  <meta name="description" content="この記事は AWS CLI で EBS のスナップショットを作成するためのメモだ。
+正直なところ、何も難しいことはない。ボリューム ID が &ldquo;vol-xxxxxxxx&rdquo; の EBS ボリュームのバックアップを取るなら aws ec2 create-snapshot --volume-id vol-xxxxxxxx --description &quot;My Backup&quot; とすればいいだけだ。
+ただし、create-snapshot はオプションが少なく、スナップショットの作成と同時にタグ付ができない。例えば、スナップショットの Name タグを &ldquo;MySnapshot&rdquo; とし、Cost を タグを &ldquo;MyService&rdquo; としたければ、create-tags コマンドを別に叩く必要がある。
+create-snapshot は作成するスナップショットの情報を JSON で STDOUT に出力する。この JSON にはスナップショット ID の情報も含まれているので、次のようにすることで目的の処理を達成できる。
+$ SnapshotId=$(aws ec2 create-snapshot --volume-id vol-xxxxxxx --description &quot;MySnapshot&quot;) | jq -r .SnapshotId) $ aws ec2 create-tags --resources $SnapshotId --tags Key=Cost,Value=MyService Key=Name,Value=MySnapshot  なお、AWS では EBS ボリュームのスナップショットを連続で作成した場合、後から作られるスナップショットは前回のスナップショットからの増分スナップショットになる。">
+  <meta property="og:description" content="この記事は AWS CLI で EBS のスナップショットを作成するためのメモだ。
+正直なところ、何も難しいことはない。ボリューム ID が &ldquo;vol-xxxxxxxx&rdquo; の EBS ボリュームのバックアップを取るなら aws ec2 create-snapshot --volume-id vol-xxxxxxxx --description &quot;My Backup&quot; とすればいいだけだ。
+ただし、create-snapshot はオプションが少なく、スナップショットの作成と同時にタグ付ができない。例えば、スナップショットの Name タグを &ldquo;MySnapshot&rdquo; とし、Cost を タグを &ldquo;MyService&rdquo; としたければ、create-tags コマンドを別に叩く必要がある。
+create-snapshot は作成するスナップショットの情報を JSON で STDOUT に出力する。この JSON にはスナップショット ID の情報も含まれているので、次のようにすることで目的の処理を達成できる。
+$ SnapshotId=$(aws ec2 create-snapshot --volume-id vol-xxxxxxx --description &quot;MySnapshot&quot;) | jq -r .SnapshotId) $ aws ec2 create-tags --resources $SnapshotId --tags Key=Cost,Value=MyService Key=Name,Value=MySnapshot  なお、AWS では EBS ボリュームのスナップショットを連続で作成した場合、後から作られるスナップショットは前回のスナップショットからの増分スナップショットになる。">
+  <meta name="twitter:description" content="この記事は AWS CLI で EBS のスナップショットを作成するためのメモだ。
+正直なところ、何も難しいことはない。ボリューム ID が &ldquo;vol-xxxxxxxx&rdquo; の EBS ボリュームのバックアップを取るなら aws ec2 create-snapshot --volume-id vol-xxxxxxxx --description &quot;My …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://blog.mahata.org/post/ruby-prevent-deadlock/" />
+  <meta property="og:url" content="https://blog.mahata.org/post/create-ebs-snapshot/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="大事なものは目に見えない" />
 
   <meta name="generator" content="Hugo 0.20.7" />
-  <link rel="canonical" href="https://blog.mahata.org/post/ruby-prevent-deadlock/" />
+  <link rel="canonical" href="https://blog.mahata.org/post/create-ebs-snapshot/" />
   <link rel="alternate" href="https://blog.mahata.org/index.xml" type="application/rss+xml" title="大事なものは目に見えない">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -146,11 +143,11 @@
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>*nix が wait 絡みのデッドロックを防ぐ仕組み</h1>
+              <h1>AWS CLI で EBS のスナップショットを作成する</h1>
                 
                 
                   <span class="post-meta">
-  Posted on June 14, 2017
+  Posted on June 15, 2017
   
 </span>
 
@@ -169,47 +166,31 @@
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>引き続き「<a href="https://www.amazon.co.jp/exec/obidos/ASIN/B0078VSRUE/96c11b31f45ff807-22/ref=nosim/">Working With Unix Processes</a>」を読んでいる。</p>
+        <p>この記事は AWS CLI で EBS のスナップショットを作成するためのメモだ。</p>
 
-<p>サンプルで「デッドロックが起こりそう <strong>だけど、起こらない</strong>」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。</p>
+<p>正直なところ、何も難しいことはない。ボリューム ID が &ldquo;vol-xxxxxxxx&rdquo; の EBS ボリュームのバックアップを取るなら <code>aws ec2 create-snapshot --volume-id vol-xxxxxxxx --description &quot;My Backup&quot;</code> とすればいいだけだ。</p>
 
-<pre><code class="language-ruby">#!/usr/bin/env ruby
+<p>ただし、<code>create-snapshot</code> はオプションが少なく、スナップショットの作成と同時にタグ付ができない。例えば、スナップショットの Name タグを &ldquo;MySnapshot&rdquo; とし、Cost を タグを &ldquo;MyService&rdquo; としたければ、<code>create-tags</code> コマンドを別に叩く必要がある。</p>
 
-# ふたつの子プロセスをつくり、すぐに殺す
-2.times do
-  fork do
-    abort &quot;おしまい&quot;
-  end
-end
+<p><code>create-snapshot</code> は作成するスナップショットの情報を JSON で STDOUT に出力する。この JSON にはスナップショット ID の情報も含まれているので、次のようにすることで目的の処理を達成できる。</p>
 
-# 最初の子プロセスを待ち、その後は3秒ほど寝る
-# 寝ている間にもうひとつの子プロセスも終了する
-puts Process.wait
-sleep 3
-
-# もう子プロセスは終了しているので、これはデッドロックするはずでは? =&gt; 実際はしない
-puts Process.wait
+<pre><code>$ SnapshotId=$(aws ec2 create-snapshot --volume-id vol-xxxxxxx --description &quot;MySnapshot&quot;) | jq -r .SnapshotId)
+$ aws ec2 create-tags --resources $SnapshotId --tags Key=Cost,Value=MyService Key=Name,Value=MySnapshot
 </code></pre>
 
-<p>コードのコメントに書いた通りなのだが、最後の <code>Process.wait</code> はデッドロックになっても不思議ではない&hellip; けど、実際にはデッドロックにならない。</p>
-
-<p>カーネルには <code>exit</code> したプロセスの情報をキューに詰めておく機構があり、親プロセスは死んだ子プロセスの順にその情報を取得できる。だから、サンプルでの最後の <code>Process.wait</code> は実際には子プロセスの終了を待つのではなく、キューから「既に死んだ」子プロセスの情報を取得している。</p>
-
-<p>ただ、子プロセスが存在しない「かつ」前述のキューにもデータが存在しないとき、<code>Process.wait</code> は <code>Errno::ECHILD</code> 例外を起こす。</p>
-
-<p>まあ、それはそうだよね。</p>
+<p>なお、AWS では EBS ボリュームのスナップショットを連続で作成した場合、後から作られるスナップショットは前回のスナップショットからの増分スナップショットになる。</p>
 
       </article>
 
       <ul class="pager blog-pager">
         
           <li class="previous">
-            <a href="https://blog.mahata.org/post/ruby-gc-cow/" data-toggle="tooltip" data-placement="top" title="Ruby 2.0 (or later) の CoW">&larr; Previous Post</a>
+            <a href="https://blog.mahata.org/post/ruby-prevent-deadlock/" data-toggle="tooltip" data-placement="top" title="*nix が wait 絡みのデッドロックを防ぐ仕組み">&larr; Previous Post</a>
           </li>
         
         
           <li class="next">
-            <a href="https://blog.mahata.org/post/create-ebs-snapshot/" data-toggle="tooltip" data-placement="top" title="AWS CLI で EBS のスナップショットを作成する">Next Post &rarr;</a>
+            <a href="https://blog.mahata.org/post/attach-and-mount-ebs-volume-created-by-snapshot/" data-toggle="tooltip" data-placement="top" title="スナップショットから作成した EBS ボリュームをマウントする">Next Post &rarr;</a>
           </li>
         
       </ul>

@@ -152,6 +152,65 @@
           
           
             <article class="post-preview">
+              <a href="https://blog.mahata.org/post/attach-and-mount-ebs-volume-created-by-snapshot/">
+                <h2 class="post-title">スナップショットから作成した EBS ボリュームをマウントする</h2>
+                
+              </a>
+
+              <span class="post-meta">
+  Posted on June 15, 2017
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  この記事では EBS ボリュームのスナップショットを、新しい EC2 インスタンスでマウントする方法について記述する。すでに EBS ボリュームのスナップショットは作成されていると仮定する。まだであれば、ひとつ前の記事を参照してほしい。
+AWS コンソールでぽちぽちと新しい EC2 インスタンスを作成し、途中の &ldquo;Add Storage&rdquo; のプロセスで /dev/sdf 辺りに前述の記事で作成したスナップショットIDを使ってボリュームを追加するとしよう。
+最終的に作成されたインスタンスに ssh でログインし、lsblk を実行すると次のように表示される。ブロックデバイスは認識されているものの、マウントされていないことがわかる。
+## /dev/xvdf はアタッチされているが、マウントされていない (MOUNTPOINT が空) ## (lsblk の NAME は &quot;/dev/&quot; が省略される) $ lsblk NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINT xvda 202:0 0 8G 0 disk └─xvda1 202:1 0 8G 0 part / xvdf 202:80 0 512G 0 disk ## ちなみに xvdf は /dev/sdf のエイリアス $ ls -l /dev/sdf lrwxrwxrwx 1 root root 4 Jun 14 08:16 /dev/sdf -&gt; xvdf ## /dev/xvdf にファイルシステムは存在することを確認する (ない場合は mkfs を使う) $ sudo file -s /dev/xvdf /dev/xvdf: Linux rev 1.
+                  <a href="https://blog.mahata.org/post/attach-and-mount-ebs-volume-created-by-snapshot/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://blog.mahata.org/post/create-ebs-snapshot/">
+                <h2 class="post-title">AWS CLI で EBS のスナップショットを作成する</h2>
+                
+              </a>
+
+              <span class="post-meta">
+  Posted on June 15, 2017
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  <p>この記事は AWS CLI で EBS のスナップショットを作成するためのメモだ。</p>
+
+<p>正直なところ、何も難しいことはない。ボリューム ID が &ldquo;vol-xxxxxxxx&rdquo; の EBS ボリュームのバックアップを取るなら <code>aws ec2 create-snapshot --volume-id vol-xxxxxxxx --description &quot;My Backup&quot;</code> とすればいいだけだ。</p>
+
+<p>ただし、<code>create-snapshot</code> はオプションが少なく、スナップショットの作成と同時にタグ付ができない。例えば、スナップショットの Name タグを &ldquo;MySnapshot&rdquo; とし、Cost を タグを &ldquo;MyService&rdquo; としたければ、<code>create-tags</code> コマンドを別に叩く必要がある。</p>
+
+<p><code>create-snapshot</code> は作成するスナップショットの情報を JSON で STDOUT に出力する。この JSON にはスナップショット ID の情報も含まれているので、次のようにすることで目的の処理を達成できる。</p>
+
+<pre><code>$ SnapshotId=$(aws ec2 create-snapshot --volume-id vol-xxxxxxx --description &quot;MySnapshot&quot;) | jq -r .SnapshotId)
+$ aws ec2 create-tags --resources $SnapshotId --tags Key=Cost,Value=MyService Key=Name,Value=MySnapshot
+</code></pre>
+
+<p>なお、AWS では EBS ボリュームのスナップショットを連続で作成した場合、後から作られるスナップショットは前回のスナップショットからの増分スナップショットになる。</p>
+
+                
+              </div>
+
+              
+            </article>
+          
+            <article class="post-preview">
               <a href="https://blog.mahata.org/post/ruby-prevent-deadlock/">
                 <h2 class="post-title">*nix が wait 絡みのデッドロックを防ぐ仕組み</h2>
                 
@@ -292,6 +351,30 @@ Run with --stacktrace option to get the stack trace. Run with --info or --debug 
   return 0;
 }
 </code></pre>
+
+                
+              </div>
+
+              
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://blog.mahata.org/post/blog-migration/">
+                <h2 class="post-title">ブログの移転</h2>
+                
+              </a>
+
+              <span class="post-meta">
+  Posted on May 7, 2017
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  <p><a href="https://mahata.wordpress.com/">少し前まで WordPress でブログを管理していた</a>けど、心機一転して自分のドメインでブログを再開することにしました。</p>
+
+<p>今後ともどうぞよろしくお願いします。</p>
 
                 
               </div>

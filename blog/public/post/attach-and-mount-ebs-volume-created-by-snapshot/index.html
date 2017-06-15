@@ -5,32 +5,27 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>*nix が wait 絡みのデッドロックを防ぐ仕組み</title>
-  <meta property="og:title" content="*nix が wait 絡みのデッドロックを防ぐ仕組み" />
-  <meta name="twitter:title" content="*nix が wait 絡みのデッドロックを防ぐ仕組み" />
-  <meta name="description" content="引き続き「Working With Unix Processes」を読んでいる。
-サンプルで「デッドロックが起こりそう だけど、起こらない」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。
-#!/usr/bin/env ruby # ふたつの子プロセスをつくり、すぐに殺す 2.times do fork do abort &quot;おしまい&quot; end end # 最初の子プロセスを待ち、その後は3秒ほど寝る # 寝ている間にもうひとつの子プロセスも終了する puts Process.wait sleep 3 # もう子プロセスは終了しているので、これはデッドロックするはずでは? =&gt; 実際はしない puts Process.wait  コードのコメントに書いた通りなのだが、最後の Process.wait はデッドロックになっても不思議ではない&hellip; けど、実際にはデッドロックにならない。
-カーネルには exit したプロセスの情報をキューに詰めておく機構があり、親プロセスは死んだ子プロセスの順にその情報を取得できる。だから、サンプルでの最後の Process.wait は実際には子プロセスの終了を待つのではなく、キューから「既に死んだ」子プロセスの情報を取得している。
-ただ、子プロセスが存在しない「かつ」前述のキューにもデータが存在しないとき、Process.wait は Errno::ECHILD 例外を起こす。
-まあ、それはそうだよね。">
-  <meta property="og:description" content="引き続き「Working With Unix Processes」を読んでいる。
-サンプルで「デッドロックが起こりそう だけど、起こらない」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。
-#!/usr/bin/env ruby # ふたつの子プロセスをつくり、すぐに殺す 2.times do fork do abort &quot;おしまい&quot; end end # 最初の子プロセスを待ち、その後は3秒ほど寝る # 寝ている間にもうひとつの子プロセスも終了する puts Process.wait sleep 3 # もう子プロセスは終了しているので、これはデッドロックするはずでは? =&gt; 実際はしない puts Process.wait  コードのコメントに書いた通りなのだが、最後の Process.wait はデッドロックになっても不思議ではない&hellip; けど、実際にはデッドロックにならない。
-カーネルには exit したプロセスの情報をキューに詰めておく機構があり、親プロセスは死んだ子プロセスの順にその情報を取得できる。だから、サンプルでの最後の Process.wait は実際には子プロセスの終了を待つのではなく、キューから「既に死んだ」子プロセスの情報を取得している。
-ただ、子プロセスが存在しない「かつ」前述のキューにもデータが存在しないとき、Process.wait は Errno::ECHILD 例外を起こす。
-まあ、それはそうだよね。">
-  <meta name="twitter:description" content="引き続き「Working With Unix Processes」を読んでいる。
-サンプルで「デッドロックが起こりそう だけど、起こらない」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。
-#!/usr/bin/env ruby # ふたつの子プロセスをつくり、すぐに殺す 2.times do fork do abort &quot;おしまい&quot; end …">
+  <title>スナップショットから作成した EBS ボリュームをマウントする</title>
+  <meta property="og:title" content="スナップショットから作成した EBS ボリュームをマウントする" />
+  <meta name="twitter:title" content="スナップショットから作成した EBS ボリュームをマウントする" />
+  <meta name="description" content="この記事では EBS ボリュームのスナップショットを、新しい EC2 インスタンスでマウントする方法について記述する。すでに EBS ボリュームのスナップショットは作成されていると仮定する。まだであれば、ひとつ前の記事を参照してほしい。
+AWS コンソールでぽちぽちと新しい EC2 インスタンスを作成し、途中の &ldquo;Add Storage&rdquo; のプロセスで /dev/sdf 辺りに前述の記事で作成したスナップショットIDを使ってボリュームを追加するとしよう。
+最終的に作成されたインスタンスに ssh でログインし、lsblk を実行すると次のように表示される。ブロックデバイスは認識されているものの、マウントされていないことがわかる。
+## /dev/xvdf はアタッチされているが、マウントされていない (MOUNTPOINT が空) ## (lsblk の NAME は &quot;/dev/&quot; が省略される) $ lsblk NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINT xvda 202:0 0 8G 0 disk └─xvda1 202:1 0 8G 0 part / xvdf 202:80 0 512G 0 disk ## ちなみに xvdf は /dev/sdf のエイリアス $ ls -l /dev/sdf lrwxrwxrwx 1 root root 4 Jun 14 08:16 /dev/sdf -&gt; xvdf ## /dev/xvdf にファイルシステムは存在することを確認する (ない場合は mkfs を使う) $ sudo file -s /dev/xvdf /dev/xvdf: Linux rev 1.">
+  <meta property="og:description" content="この記事では EBS ボリュームのスナップショットを、新しい EC2 インスタンスでマウントする方法について記述する。すでに EBS ボリュームのスナップショットは作成されていると仮定する。まだであれば、ひとつ前の記事を参照してほしい。
+AWS コンソールでぽちぽちと新しい EC2 インスタンスを作成し、途中の &ldquo;Add Storage&rdquo; のプロセスで /dev/sdf 辺りに前述の記事で作成したスナップショットIDを使ってボリュームを追加するとしよう。
+最終的に作成されたインスタンスに ssh でログインし、lsblk を実行すると次のように表示される。ブロックデバイスは認識されているものの、マウントされていないことがわかる。
+## /dev/xvdf はアタッチされているが、マウントされていない (MOUNTPOINT が空) ## (lsblk の NAME は &quot;/dev/&quot; が省略される) $ lsblk NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINT xvda 202:0 0 8G 0 disk └─xvda1 202:1 0 8G 0 part / xvdf 202:80 0 512G 0 disk ## ちなみに xvdf は /dev/sdf のエイリアス $ ls -l /dev/sdf lrwxrwxrwx 1 root root 4 Jun 14 08:16 /dev/sdf -&gt; xvdf ## /dev/xvdf にファイルシステムは存在することを確認する (ない場合は mkfs を使う) $ sudo file -s /dev/xvdf /dev/xvdf: Linux rev 1.">
+  <meta name="twitter:description" content="この記事では EBS ボリュームのスナップショットを、新しい EC2 インスタンスでマウントする方法について記述する。すでに EBS ボリュームのスナップショットは作成されていると仮定する。まだであれば、ひとつ前の記事を参照してほしい。
+AWS コンソールでぽちぽちと新しい EC2 インスタンスを作成し、途中の &ldquo;Add Storage&rdquo; のプロセスで /dev/sdf 辺 …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://blog.mahata.org/post/ruby-prevent-deadlock/" />
+  <meta property="og:url" content="https://blog.mahata.org/post/attach-and-mount-ebs-volume-created-by-snapshot/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="大事なものは目に見えない" />
 
   <meta name="generator" content="Hugo 0.20.7" />
-  <link rel="canonical" href="https://blog.mahata.org/post/ruby-prevent-deadlock/" />
+  <link rel="canonical" href="https://blog.mahata.org/post/attach-and-mount-ebs-volume-created-by-snapshot/" />
   <link rel="alternate" href="https://blog.mahata.org/index.xml" type="application/rss+xml" title="大事なものは目に見えない">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -146,11 +141,11 @@
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>*nix が wait 絡みのデッドロックを防ぐ仕組み</h1>
+              <h1>スナップショットから作成した EBS ボリュームをマウントする</h1>
                 
                 
                   <span class="post-meta">
-  Posted on June 14, 2017
+  Posted on June 15, 2017
   
 </span>
 
@@ -169,48 +164,74 @@
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>引き続き「<a href="https://www.amazon.co.jp/exec/obidos/ASIN/B0078VSRUE/96c11b31f45ff807-22/ref=nosim/">Working With Unix Processes</a>」を読んでいる。</p>
+        
 
-<p>サンプルで「デッドロックが起こりそう <strong>だけど、起こらない</strong>」コードが掲載されていた。次のスニペットは、そのサンプルを少し書き換えたものだ。</p>
+<p>この記事では EBS ボリュームのスナップショットを、新しい EC2 インスタンスでマウントする方法について記述する。すでに EBS ボリュームのスナップショットは作成されていると仮定する。まだであれば、<a href="/post/create-ebs-snapshot/">ひとつ前の記事</a>を参照してほしい。</p>
 
-<pre><code class="language-ruby">#!/usr/bin/env ruby
+<p>AWS コンソールでぽちぽちと新しい EC2 インスタンスを作成し、途中の &ldquo;Add Storage&rdquo; のプロセスで <code>/dev/sdf</code> 辺りに前述の記事で作成したスナップショットIDを使ってボリュームを追加するとしよう。</p>
 
-# ふたつの子プロセスをつくり、すぐに殺す
-2.times do
-  fork do
-    abort &quot;おしまい&quot;
-  end
-end
+<p>最終的に作成されたインスタンスに ssh でログインし、<code>lsblk</code> を実行すると次のように表示される。ブロックデバイスは認識されているものの、マウントされていないことがわかる。</p>
 
-# 最初の子プロセスを待ち、その後は3秒ほど寝る
-# 寝ている間にもうひとつの子プロセスも終了する
-puts Process.wait
-sleep 3
+<pre><code>## /dev/xvdf はアタッチされているが、マウントされていない (MOUNTPOINT が空)
+## (lsblk の NAME は &quot;/dev/&quot; が省略される)
+$ lsblk
+NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+xvda    202:0    0    8G  0 disk
+└─xvda1 202:1    0    8G  0 part /
+xvdf    202:80   0  512G  0 disk
 
-# もう子プロセスは終了しているので、これはデッドロックするはずでは? =&gt; 実際はしない
-puts Process.wait
+## ちなみに xvdf は /dev/sdf のエイリアス
+$ ls -l /dev/sdf
+lrwxrwxrwx 1 root root 4 Jun 14 08:16 /dev/sdf -&gt; xvdf
+
+## /dev/xvdf にファイルシステムは存在することを確認する (ない場合は mkfs を使う)
+$ sudo file -s /dev/xvdf
+/dev/xvdf: Linux rev 1.0 ext4 filesystem data, UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx (needs journal recovery) (extents) (large files) (huge files)
 </code></pre>
 
-<p>コードのコメントに書いた通りなのだが、最後の <code>Process.wait</code> はデッドロックになっても不思議ではない&hellip; けど、実際にはデッドロックにならない。</p>
+<p>マウントするためには、次の順で作業をすればよい。</p>
 
-<p>カーネルには <code>exit</code> したプロセスの情報をキューに詰めておく機構があり、親プロセスは死んだ子プロセスの順にその情報を取得できる。だから、サンプルでの最後の <code>Process.wait</code> は実際には子プロセスの終了を待つのではなく、キューから「既に死んだ」子プロセスの情報を取得している。</p>
+<ol>
+<li>マウントポイントを作成する (今回の例では <code>/data/mydata</code> をマウントポイントとする)</li>
+<li><code>/etc/fstab</code> を変更する</li>
+<li><code>mount -a</code> で <code>/etc/fstab</code> の内容を反映する</li>
+</ol>
 
-<p>ただ、子プロセスが存在しない「かつ」前述のキューにもデータが存在しないとき、<code>Process.wait</code> は <code>Errno::ECHILD</code> 例外を起こす。</p>
+<p>具体的には、こうだ。</p>
 
-<p>まあ、それはそうだよね。</p>
+<pre><code>## マウントポイントを作成する
+$ sudo mkdir -p /data/mydata
+
+## (再起動でリセットされない) 永続的なマウントを実現するため /etc/fstab を変更
+$ sudo cp /etc/fstab /etc/fstab.orig
+$ sudo vi /etc/fstab  # (次の行を追加: `/dev/xvdf /data/mydata ext4 defaults,nofail 0 2`)
+
+## /etc/fstab の内容を反映する
+$ sudo mount -a
+</code></pre>
+
+<p><code>/etc/fstab</code> に書けるオプションは正直なところ、かなりややこしい。AWS オフィシャルのドキュメントに次のようにある。</p>
+
+<blockquote>
+<p>(/etc/fstab の) この行の最後の 3 つのフィールドは、ファイルシステムのマウントオプション、ファイルシステムのダンプ頻度、起動時に実行されるファイルシステムチェックの順番です。これらの値がわからない場合は、例の値 (defaults,nofail 0 2) を使用してください。</p>
+</blockquote>
+
+<p>素直に「例の値 <code>(defaults,nofail 0 2)</code>」を採用しても多くの場合は問題ないだろう。</p>
+
+<h2 id="参考記事">参考記事</h2>
+
+<ul>
+<li><a href="https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/ebs-using-volumes.html">Amazon EBS ボリュームを使用できるようにする - Amazon Elastic Compute Cloud</a></li>
+</ul>
 
       </article>
 
       <ul class="pager blog-pager">
         
           <li class="previous">
-            <a href="https://blog.mahata.org/post/ruby-gc-cow/" data-toggle="tooltip" data-placement="top" title="Ruby 2.0 (or later) の CoW">&larr; Previous Post</a>
+            <a href="https://blog.mahata.org/post/create-ebs-snapshot/" data-toggle="tooltip" data-placement="top" title="AWS CLI で EBS のスナップショットを作成する">&larr; Previous Post</a>
           </li>
         
-        
-          <li class="next">
-            <a href="https://blog.mahata.org/post/create-ebs-snapshot/" data-toggle="tooltip" data-placement="top" title="AWS CLI で EBS のスナップショットを作成する">Next Post &rarr;</a>
-          </li>
         
       </ul>
 
