@@ -38,14 +38,14 @@ $ sudo file -s /dev/xvdf
 具体的には、こうだ。
 
 ```
-# マウントポイントを作成する
+## マウントポイントを作成する
 $ sudo mkdir -p /data/mydata
 
-# (再起動でリセットされない) 永続的なマウントを実現するため /etc/fstab を変更
+## (再起動でリセットされない) 永続的なマウントを実現するため /etc/fstab を変更
 $ sudo cp /etc/fstab /etc/fstab.orig
 $ sudo vi /etc/fstab  # (次の行を追加: `/dev/xvdf /data/mydata ext4 defaults,nofail 0 2`)
 
-# /etc/fstab の内容を反映する
+## /etc/fstab の内容を反映する
 $ sudo mount -a
 ```
 
