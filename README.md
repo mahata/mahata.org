@@ -16,10 +16,31 @@ pnpm run dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. Opening
 `public/index.html` directly in a browser also works.
 
+Before pushing, run `pnpm run lint` and `pnpm test`.
+
+## Analytics
+
+[Microsoft Clarity](https://clarity.microsoft.com/) records how visitors use the site. The
+[dashboard](https://clarity.microsoft.com/projects/view/z7bcthqq88/dashboard) shows heatmaps and
+session recordings.
+
+Every page in `public/` sets up Clarity in its `<head>`. An inline `<script>` defines a
+`window.clarity` function that queues calls, and `<script async>` then loads the Clarity tag
+`https://www.clarity.ms/tag/z7bcthqq88`. This does the same as the snippet in the Clarity
+dashboard, rewritten so that Biome's lint rules pass. The page footer tells visitors about Clarity
+and links to the Microsoft Privacy Statement, because the
+[Clarity FAQ](https://learn.microsoft.com/clarity/faq#privacy) requires sites to inform visitors
+about its cookies. `pnpm test` checks every HTML file in `public/` for both, so copy them into any
+new page.
+
+The site sends Clarity no consent signal, so Clarity tracks visitors from the EEA, the UK, and
+Switzerland without cookies, one page view at a time. For everyone else, **Settings → Setup →
+Cookies** in the Clarity project decides whether Clarity sets cookies.
+
 ## Deploy on GitHub Pages
 
-Biome checks are automated for every pull request and push to `main` by
-[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). After the check passes on a push to
+Biome checks and tests run on every pull request and push to `main` in
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). After they pass on a push to
 `main`, the workflow publishes `public/` to GitHub Pages, which serves
 [mahata.org](https://mahata.org). That workflow is the source of truth for what is live.
 

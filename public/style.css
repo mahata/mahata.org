@@ -280,6 +280,32 @@ h2 .icon {
   color: #d1d5db;
 }
 
+.site-footer {
+  position: relative;
+  z-index: 2;
+  max-width: 48rem;
+  margin: 2.5rem auto 0;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.site-footer a {
+  color: #cbd5e1;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.site-footer a:hover {
+  color: #fff;
+}
+
+.site-footer a:focus-visible {
+  outline: 3px solid rgb(147 197 253 / 0.85);
+  outline-offset: 3px;
+}
+
 @media (min-width: 640px) {
   body {
     padding: 4rem 1.5rem 5rem;
