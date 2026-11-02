@@ -10,6 +10,13 @@
     />
     <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" href="style.css" />
+    <script>
+      window.clarity ??= (...args) => {
+        window.clarity.q ??= [];
+        window.clarity.q.push(args);
+      };
+    </script>
+    <script async src="https://www.clarity.ms/tag/z7bcthqq88"></script>
   </head>
   <body>
     <!-- Icon sprite. The hidden attribute doesn't hide <svg> elements, hence display: none. -->
@@ -134,5 +141,15 @@
         </div>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <p>
+        This site uses Microsoft Clarity to see how visitors use it through heatmaps and session replays, so I can
+        improve it. Clarity may use cookies and similar technologies to collect this data. By using this site, you agree
+        that Microsoft and I can collect and use it. Learn more in the
+        <a href="https://www.microsoft.com/privacy/privacystatement" target="_blank" rel="noopener noreferrer">Microsoft
+          Privacy Statement</a>.
+      </p>
+    </footer>
   </body>
 </html>

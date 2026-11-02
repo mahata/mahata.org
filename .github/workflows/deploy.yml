@@ -15,8 +15,8 @@ permissions:
   contents: read
 
 jobs:
-  biome:
-    name: Biome check
+  check:
+    name: Lint and test
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     defaults:
@@ -43,9 +43,12 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
+      - name: Test
+        run: pnpm test
+
   deploy:
     name: Deploy to GitHub Pages
-    needs: biome
+    needs: check
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-24.04
     timeout-minutes: 10

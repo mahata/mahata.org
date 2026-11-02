@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "pnpm --package=serve@14.2.6 dlx serve public",
     "lint": "biome check .",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "test": "node --test"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.3"
