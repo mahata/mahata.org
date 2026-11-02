@@ -10,13 +10,6 @@
     />
     <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" href="style.css" />
-    <script>
-      window.clarity ??= (...args) => {
-        window.clarity.q ??= [];
-        window.clarity.q.push(args);
-      };
-    </script>
-    <script async src="https://www.clarity.ms/tag/z7bcthqq88"></script>
   </head>
   <body>
     <!-- Icon sprite. The hidden attribute doesn't hide <svg> elements, hence display: none. -->
@@ -142,8 +135,10 @@
       </section>
     </main>
 
-    <footer class="site-footer">
-      <a href="privacy.html">Privacy</a>
-    </footer>
+    <script
+      type="module"
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "ac326de2e67d46d5ad49364a7c06cab7"}'
+    ></script>
   </body>
 </html>

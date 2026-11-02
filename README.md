@@ -20,26 +20,23 @@ Before pushing, run `pnpm run lint` and `pnpm test`.
 
 ## Analytics
 
-[Microsoft Clarity](https://clarity.microsoft.com/) records how visitors use the site. The
-[dashboard](https://clarity.microsoft.com/projects/view/z7bcthqq88/dashboard) shows heatmaps and
-session recordings.
+[Cloudflare Web Analytics](https://developers.cloudflare.com/web-analytics/) counts visits and page
+views and measures Core Web Vitals. See the `mahata.org` site on the
+[Web Analytics page](https://dash.cloudflare.com/?to=/:account/web-analytics) of the Cloudflare
+dashboard.
 
-Every page in `public/` sets up Clarity in its `<head>`. An inline `<script>` defines a
-`window.clarity` function that queues calls, and `<script async>` then loads the Clarity tag
-`https://www.clarity.ms/tag/z7bcthqq88`. This does the same as the snippet in the Clarity
-dashboard, rewritten so that Biome's lint rules pass. Each page footer also links to
-[`public/privacy.html`](public/privacy.html). `pnpm test` checks every HTML file in `public/` for
-both, so copy them into any new page.
+Cloudflare injects its beacon automatically only into traffic it proxies, and `mahata.org` is DNS
+only (see [Deploy on GitHub Pages](#deploy-on-github-pages)). Every page in `public/` therefore ends
+its `<body>` with the JS snippet from **Manage site** in the Cloudflare dashboard. The snippet loads
+`https://static.cloudflareinsights.com/beacon.min.js` as a module and passes the site token in
+`data-cf-beacon`. `pnpm test` checks every HTML file in `public/` for it, so copy it into any new
+page.
 
-`privacy.html` is the privacy notice that section 4.4(b) of the
-[Clarity Terms of Use](https://clarity.microsoft.com/terms) requires. It must say that Microsoft may
-collect personal data from visitors and collects or receives it to provide Microsoft Advertising,
-link to the Microsoft Privacy Statement, and offer opt-out choices. `pnpm test` checks for these
-too. When you change the page, update the date at its top.
-
-The site sends Clarity no consent signal, so Clarity tracks visitors from the EEA, the UK, and
-Switzerland without cookies, one page view at a time. For everyone else, **Settings → Setup →
-Cookies** in the Clarity project decides whether Clarity sets cookies.
+The beacon keeps no client-side state such as cookies or `localStorage`, and Cloudflare states that
+Web Analytics does not collect or use visitors' personal data
+([About](https://developers.cloudflare.com/web-analytics/about/),
+[Core Web Vitals](https://developers.cloudflare.com/web-analytics/data-metrics/core-web-vitals/#information-collected)),
+so the site has no privacy page.
 
 ## Deploy on GitHub Pages
 
