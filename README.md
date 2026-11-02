@@ -27,11 +27,15 @@ session recordings.
 Every page in `public/` sets up Clarity in its `<head>`. An inline `<script>` defines a
 `window.clarity` function that queues calls, and `<script async>` then loads the Clarity tag
 `https://www.clarity.ms/tag/z7bcthqq88`. This does the same as the snippet in the Clarity
-dashboard, rewritten so that Biome's lint rules pass. The page footer tells visitors about Clarity
-and links to the Microsoft Privacy Statement, because the
-[Clarity FAQ](https://learn.microsoft.com/clarity/faq#privacy) requires sites to inform visitors
-about its cookies. `pnpm test` checks every HTML file in `public/` for both, so copy them into any
-new page.
+dashboard, rewritten so that Biome's lint rules pass. Each page footer also links to
+[`public/privacy.html`](public/privacy.html). `pnpm test` checks every HTML file in `public/` for
+both, so copy them into any new page.
+
+`privacy.html` is the privacy notice that section 4.4(b) of the
+[Clarity Terms of Use](https://clarity.microsoft.com/terms) requires. It must say that Microsoft may
+collect personal data from visitors and collects or receives it to provide Microsoft Advertising,
+link to the Microsoft Privacy Statement, and offer opt-out choices. `pnpm test` checks for these
+too. When you change the page, update the date at its top.
 
 The site sends Clarity no consent signal, so Clarity tracks visitors from the EEA, the UK, and
 Switzerland without cookies, one page view at a time. For everyone else, **Settings → Setup →
