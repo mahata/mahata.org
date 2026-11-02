@@ -16,25 +16,23 @@ pnpm run dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. Opening
 `public/index.html` directly in a browser also works.
 
-## Deploy on Netlify
+## Deploy on GitHub Pages
 
 Biome checks are automated for every pull request and push to `main` by
 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). After the check passes on a push to
-`main`, the workflow deploys `public/` to the existing Netlify site serving
+`main`, the workflow publishes `public/` to GitHub Pages, which serves
 [mahata.org](https://mahata.org). That workflow is the source of truth for what is live.
 
-Configure these GitHub Actions secrets before running the workflow:
+The repository's Pages settings use **GitHub Actions** as the source and `mahata.org` as the custom
+domain, with HTTPS enforced. Change the domain in **Settings → Pages**, not with a `CNAME` file:
+GitHub Pages ignores that file for sites deployed by a custom workflow.
 
-- `NETLIFY_AUTH_TOKEN`: a Netlify personal access token with access to the production site
-- `NETLIFY_SITE_ID`: the Site ID shown in the existing production site's Netlify configuration
+In Cloudflare DNS, `mahata.org` is a CNAME to `mahata.github.io`. Keep its proxy status
+**DNS only**, because GitHub Pages can issue the HTTPS certificate only when the domain resolves
+directly to GitHub.
 
-The Site ID must belong to the site already serving `mahata.org`. Do not create a new Netlify
-site, because deploying to a second site will not update the production domain.
-
-To deploy manually for troubleshooting, export the same credentials and run:
+To redeploy without a new commit, run the workflow manually:
 
 ```bash
-export NETLIFY_AUTH_TOKEN="..."
-export NETLIFY_SITE_ID="..."
-pnpm run deploy
+gh workflow run deploy.yml --ref main
 ```

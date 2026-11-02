@@ -8,7 +8,8 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Let production deployments from main finish; only superseded pull request runs are cancelled.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -43,48 +44,32 @@ jobs:
         run: pnpm run lint
 
   deploy:
-    name: Deploy to Netlify
+    name: Deploy to GitHub Pages
     needs: biome
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     concurrency:
-      group: netlify-production
-      cancel-in-progress: true
-    defaults:
-      run:
-        shell: bash --noprofile --norc -eo pipefail {0}
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
-        name: Install pnpm
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v5
         with:
-          version: 10.4.1
-          run_install: false
+          path: public
 
-      - name: Install Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: "22.14.0"
-          cache: "pnpm"
-
-      - name: Verify Netlify credentials
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: |
-          test -n "$NETLIFY_AUTH_TOKEN" || {
-            echo "::error::NETLIFY_AUTH_TOKEN is not configured"
-            exit 1
-          }
-          test -n "$NETLIFY_SITE_ID" || {
-            echo "::error::NETLIFY_SITE_ID is not configured"
-            exit 1
-          }
-
-      - name: Deploy to Netlify
-        run: pnpm run deploy
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

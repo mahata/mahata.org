@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "pnpm --package=serve@14.2.6 dlx serve public",
     "lint": "biome check .",
-    "format": "biome format --write .",
-    "deploy": "pnpm --package=netlify-cli@27.8.1 dlx netlify deploy --prod --dir=public --site \"$NETLIFY_SITE_ID\" --no-build"
+    "format": "biome format --write ."
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.3"
