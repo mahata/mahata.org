@@ -21,7 +21,7 @@ for (const page of htmlPages) {
   const html = readFileSync(join(publicDirectory, page), "utf8");
 
   test(`${page} loads the Cloudflare Web Analytics beacon for mahata.org and no other script`, () => {
-    const scriptTags = html.match(/<script\b[^>]*>/g) ?? [];
+    const scriptTags = html.match(/<script\b[^>]*>/gi) ?? [];
     assert.equal(scriptTags.length, 1, `Expected only the beacon script, found: ${scriptTags.join(" ")}`);
 
     const { "data-cf-beacon": beaconSettings, ...beaconAttributes } = attributesOf(scriptTags[0]);
