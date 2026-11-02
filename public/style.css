@@ -194,6 +194,10 @@ h2 {
   font-size: 1.25rem;
 }
 
+.app-card + .app-card {
+  margin-top: 1rem;
+}
+
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
