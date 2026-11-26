@@ -53,6 +53,9 @@ In Cloudflare DNS, `mahata.org` is a CNAME to `mahata.github.io`. Keep its proxy
 **DNS only**, because GitHub Pages can issue the HTTPS certificate only when the domain resolves
 directly to GitHub.
 
+If only the deployment fails, choose **Re-run failed jobs** to reuse the artifact from **Package site**
+while it is available (one day after upload). After it expires, choose **Re-run all jobs** to package
+and deploy the same commit again.
 To redeploy without a new commit, run the workflow manually:
 
 ```bash
