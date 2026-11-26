@@ -61,3 +61,17 @@ To redeploy without a new commit, run the workflow manually:
 ```bash
 gh workflow run deploy.yml --ref main
 ```
+
+### Action lockfile
+
+[`.github/workflows/actions.lock`](.github/workflows/actions.lock) pins every action the workflow
+uses, including transitive ones, to a commit SHA
+([docs](https://docs.github.com/en/actions/how-tos/secure-your-work/lock-workflow-dependencies)).
+Dependabot updates it together with action version bumps. When you add, remove, or change a `uses:`
+line yourself, regenerate it with the [`gh actions-lock`](https://github.com/github/gh-actions-lock)
+extension instead of editing it by hand:
+
+```bash
+gh extension install github/gh-actions-lock
+gh actions-lock
+```
