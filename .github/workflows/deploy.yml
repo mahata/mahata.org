@@ -46,10 +46,28 @@ jobs:
       - name: Test
         run: pnpm test
 
-  deploy:
-    name: Deploy to GitHub Pages
+  package:
+    name: Package site
     needs: check
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PAGES_ARTIFACT: github-pages-${{ github.run_attempt }}
+    outputs:
+      artifact_name: ${{ env.PAGES_ARTIFACT }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          name: ${{ env.PAGES_ARTIFACT }}
+          path: public
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: package
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -63,16 +81,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v7
-
       - name: Configure Pages
         uses: actions/configure-pages@v6
-
-      - name: Upload site
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: public
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+        with:
+          artifact_name: ${{ needs.package.outputs.artifact_name }}
